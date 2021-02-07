@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  postgresql:
+    image: "postgres"
+    container_name: pg-docker
+    ports:
+      - "5400:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=p@ssword
+      - POSTGRES_DB=syncengine
+    volumes:
+      - ./Database/database-data:/var/lib/postgresql/data/
+      - ./Database/postgres.conf:/etc/postgresql/postgresql.conf
+      - ./Database/SyncEngine/:/docker-entrypoint-initdb.d/
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    restart: always
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbit-queue
+    volumes:
+      - ./rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
+      - ./rabbitmq/etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@rabbit-queue
+      - ./rabbitmq/logs:/var/log/rabbitmq/log
+    ports:
+      - 5672:5672
+      - 15672:15672
+  syncengine-api:
+    image: syncengine-api:latest
+    depends_on:
+      - "rabbitmq"
+      - "postgresql"
+    build:
+      context: ./SyncEngine.Api/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+  zoho-worker:
+    image: zoho-worker:latest
+    depends_on:
+      - "rabbitmq"
+      - "postgresql"
+    build: 
+      context: ./Zoho.Worker/
+      dockerfile: Dockerfile
