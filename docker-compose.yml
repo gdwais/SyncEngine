@@ -1,21 +1,6 @@
 version: '3.4'
 
 services:
-  postgresql:
-    image: "postgres"
-    container_name: pg-docker
-    ports:
-      - "5400:5432"
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=p@ssword
-      - POSTGRES_DB=syncengine
-    volumes:
-      - ./Database/database-data:/var/lib/postgresql/data/
-      - ./Database/postgres.conf:/etc/postgresql/postgresql.conf
-      - ./Database/SyncEngine/:/docker-entrypoint-initdb.d/
-    command: postgres -c config_file=/etc/postgresql/postgresql.conf
-    restart: always
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbit-queue
