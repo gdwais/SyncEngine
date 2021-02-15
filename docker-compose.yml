@@ -12,23 +12,24 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-  syncengine-api:
-    image: syncengine-api:latest
-    depends_on:
-      - "rabbitmq"
-      - "postgresql"
-    build:
-      context: ./SyncEngine.Api/
-      dockerfile: Dockerfile
-    ports:
-      - "8000:80"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Docker
+  # syncengine-api:
+  #   image: syncengine-api:latest
+  #   depends_on:
+  #     - "rabbitmq"
+  #   build:
+  #     context: ./SyncEngine.Api/
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Docker
   zoho-worker:
     image: zoho-worker:latest
     depends_on:
       - "rabbitmq"
-      - "postgresql"
+      # - "syncengine-api"
     build: 
       context: ./Zoho.Worker/
       dockerfile: Dockerfile
+    restart: always
