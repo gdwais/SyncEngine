@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using SyncEngine.Core;
 
 namespace SyncCtl.Services
 {
     public interface IMessageService
     {
-        bool Enqueue(string message);
+        bool Enqueue(Record message);
     }
 }

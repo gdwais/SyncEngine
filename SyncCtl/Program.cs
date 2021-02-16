@@ -2,11 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-
 using Microsoft.Extensions.DependencyInjection;
 using CommandLine;
 using SyncCtl.Verbs;
 using SyncCtl.Services;
+using SyncEngine.Core;
 
 namespace SyncCtl
 {
@@ -55,7 +55,8 @@ namespace SyncCtl
             var messageService = serviceProvider.GetService<IMessageService>();
             for (int i = 0; i < 5000; i++)
             {
-                messageService.Enqueue($"ITERATION: {i} {options.Data}");
+                var record = new Record { DomainId = options.Data };
+                messageService.Enqueue(record);
             }
             return 1;
         }

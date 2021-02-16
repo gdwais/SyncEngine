@@ -12,24 +12,16 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-  # syncengine-api:
-  #   image: syncengine-api:latest
-  #   depends_on:
-  #     - "rabbitmq"
-  #   build:
-  #     context: ./SyncEngine.Api/
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Docker
-  zoho-worker:
-    image: zoho-worker:latest
-    depends_on:
-      - "rabbitmq"
-      # - "syncengine-api"
-    build: 
-      context: ./Zoho.Worker/
-      dockerfile: Dockerfile
+  postgresql:
+    image: postgres
+    container_name: pg-docker
+    ports:
+      - "5400:5432"
+    environment:
+      - POSTGRES_USER=dwais
+      - POSTGRES_PASSWORD=p@ssword
+      - POSTGRES_DB=syncengine
+    volumes:
+      - ./postgres/postgres.conf:/etc/postgresql/postgresql.conf
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
     restart: always
