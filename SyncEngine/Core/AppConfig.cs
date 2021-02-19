@@ -1,6 +1,6 @@
 using System;
 
-namespace SyncCtl
+namespace SyncEngine.Core
 {
     public class AppConfig
     {

@@ -24,7 +24,7 @@ namespace Zoho.Worker
             this.logger = logger;
             InitRabbitMQ();
         }
-
+         
         private void InitRabbitMQ()
         {
             try 
