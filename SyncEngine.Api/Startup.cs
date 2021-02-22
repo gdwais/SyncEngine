@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using SyncEngine.Api.Configuration;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 
 namespace SyncEngine.Api
 {
@@ -32,6 +35,20 @@ namespace SyncEngine.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SyncEngine.Api", Version = "v1" });
             });
+            services.Configure<UploadSettings>(Configuration);
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConfigurationStrings"));
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.Limits.MaxRequestBodySize = int.MaxValue;
+            });
+            services.Configure<IISServerOptions>(options => 
+            {
+                options.MaxRequestBodySize = int.MaxValue;
+            });
+
+            //add services here
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
