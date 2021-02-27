@@ -6,6 +6,5 @@ namespace SyncEngine.Core
     {
         public string ApplicationName { get; set; }
         public string ApplicationVersion { get; set; }
-        
-    }
+     }
 }

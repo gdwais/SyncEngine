@@ -1,5 +1,5 @@
 ﻿using SyncEngine.Api.Helpers;
-using SyncEngine.Api.Configuration;
+using SyncEngine.Core.Configuration;
 using SyncEngine.Api.Filters;
 using System;
 using System.Collections.Generic;
@@ -14,8 +14,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http.Features;
-
-
 
 namespace SyncEngine.Api.Controllers
 {
@@ -38,7 +36,7 @@ namespace SyncEngine.Api.Controllers
         {
             return 1;
         }
-
+        
         [HttpPost]
         [DisableFormValueModelBinding]
         public async Task<IActionResult> Upload()

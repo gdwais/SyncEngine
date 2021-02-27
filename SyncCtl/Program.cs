@@ -5,8 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CommandLine;
 using SyncCtl.Verbs;
-using SyncCtl.Services;
 using SyncEngine.Core;
+using SyncEngine.Core.Messages;
+using SyncEngine.Core.Configuration;
 
 namespace SyncCtl
 {
@@ -40,6 +41,9 @@ namespace SyncCtl
             
             var collection = new ServiceCollection();
             collection.AddSingleton<AppConfig>(appConfig);
+            
+            collection.AddSingleton<MessageSettings>(config.GetSection("RabbitMQ"));
+            
             collection.AddSingleton<IMessageService, MessageService>();
             serviceProvider = collection.BuildServiceProvider();
         }
@@ -48,6 +52,7 @@ namespace SyncCtl
             =>  new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false, true)
+
                 .Build();
 
         private static async Task<int> RunQueueProcess(QueueOptions options)
@@ -56,7 +61,7 @@ namespace SyncCtl
             for (int i = 0; i < 5000; i++)
             {
                 var record = new Record { DomainId = options.Data };
-                messageService.Enqueue(record);
+                messageService.Enqueue<Record>(record);
             }
             return 1;
         }

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using SyncEngine.Api.Configuration;
+using SyncEngine.Core.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 
@@ -36,6 +36,7 @@ namespace SyncEngine.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SyncEngine.Api", Version = "v1" });
             });
             services.Configure<UploadSettings>(Configuration);
+            services.Configure<MessagesSettings>(Configuration.GetSection("RabbitMQ"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConfigurationStrings"));
             services.Configure<KestrelServerOptions>(options =>
             {

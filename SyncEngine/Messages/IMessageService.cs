@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using SyncEngine.Core;
 
-namespace SyncCtl.Services
+namespace SyncEngine.Core.Messages
 {
     public interface IMessageService
     {
-        bool Enqueue(Record message);
+        bool Enqueue<T>(T message);
     }
 }

@@ -1,4 +1,4 @@
-namespace SyncEngine.Api.Configuration
+namespace SyncEngine.Core.Configuration
 {
     public class ConnectionStrings
     {
