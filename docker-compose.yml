@@ -12,16 +12,12 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-  postgresql:
-    image: postgres
-    container_name: pg-docker
-    ports:
-      - "5400:5432"
+  syncengine-db:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: syncengine-db
     environment:
-      - POSTGRES_USER=dwais
-      - POSTGRES_PASSWORD=p@ssword
-      - POSTGRES_DB=syncengine
-    volumes:
-      - ./postgres/postgres.conf:/etc/postgresql/postgresql.conf
-    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+        SA_PASSWORD: "p@ssword"
+        ACCEPT_EULA: "Y"
+    ports: 
+      - "1433:1433"
     restart: always

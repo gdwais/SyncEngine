@@ -36,14 +36,14 @@ namespace SyncCtl
         private static void RegisterServices() 
         {
             var config = GetConfiguration();
-            var appConfig = new AppConfig();
-            config.Bind("app", appConfig);
-            
+            var appSettings = new AppSettings();
+            config.Bind("Application", appSettings);
+            var messagesSettings = new MessagesSettings();
+            config.Bind("RabbitMQ", messagesSettings);
+
             var collection = new ServiceCollection();
-            collection.AddSingleton<AppConfig>(appConfig);
-            
-            collection.AddSingleton<MessageSettings>(config.GetSection("RabbitMQ"));
-            
+            collection.AddSingleton<AppSettings>(appSettings);
+            collection.AddSingleton<MessagesSettings>(messagesSettings);
             collection.AddSingleton<IMessageService, MessageService>();
             serviceProvider = collection.BuildServiceProvider();
         }
