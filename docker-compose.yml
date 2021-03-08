@@ -5,10 +5,10 @@ services:
     image: rabbitmq:3-management
     hostname: rabbit-queue
     volumes:
-      - ./rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
-      - ./rabbitmq/etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@rabbit-queue
-      - ./rabbitmq/logs:/var/log/rabbitmq/log
+      - ./docker/rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
+      - ./docker/rabbitmq/etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./docker/rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@rabbit-queue
+      - ./docker/rabbitmq/logs:/var/log/rabbitmq/log
     ports:
       - 5672:5672
       - 15672:15672
@@ -21,3 +21,7 @@ services:
     ports: 
       - "1433:1433"
     restart: always
+    volumes:
+      - sqlvolume:/var/opt/mssql
+volumes:
+  sqlvolume:

@@ -8,7 +8,7 @@ namespace SyncEngine.Core
         public string ClientId { get; set; } = String.Empty;
         public string FileName { get; set; } = String.Empty;
         public string SafeFileName { get; set; } = String.Empty;
-        public bool Complete { get; set; } = false;
+        public TransactionStage Stage { get; set; } = 0;
         
     }
 }
