@@ -1,6 +1,6 @@
 namespace SyncEngine.Core
 {
-    public enum TransactionStage
+    public enum BatchStage
     {
         Created = 1,
         Processing,

@@ -1,0 +1,35 @@
+IF NOT EXISTS (SELECT 1
+FROM INFORMATION_SCHEMA.TABLES AS it
+WHERE it.TABLE_NAME = 'DocumentType')
+BEGIN
+    CREATE TABLE DocumentType
+    (
+        DocumentTypeId INT NOT NULL CONSTRAINT PK_DocumentType PRIMARY KEY IDENTITY(1,1),
+        DocumentType VARCHAR(20) NOT NULL
+    )
+END;
+
+IF EXISTS (SELECT 1
+FROM INFORMATION_SCHEMA.TABLES AS it
+WHERE it.TABLE_NAME = 'DocumentType')
+BEGIN
+    INSERT INTO DocumentType
+        (DocumentType)
+    VALUES
+        ('TransformationMap')
+;
+END;
+
+IF NOT EXISTS (SELECT 1
+FROM INFORMATION_SCHEMA.TABLES AS it
+WHERE it.TABLE_NAME = 'Document')
+BEGIN
+    CREATE TABLE [Document]
+    (
+        DocumentId UNIQUEIDENTIFIER NOT NULL CONSTRAINT PK_Document DEFAULT NEWID() PRIMARY KEY CLUSTERED,
+        DocumentTypeId INT NOT NULL CONSTRAINT FK_DocumentDocumentTypeId FOREIGN KEY REFERENCES DocumentType (DocumentTypeId),
+        RawData VARCHAR(MAX) NOT NULL,
+        UpdatedOn DATETIME(2) NOT NULL CONSTRAINT DF_DocumentUpdatedOn DEFAULT GETUTCDATE(),
+        CreatedOn DATETIME2(2) NOT NULL CONSTRAINT DF_DocumentCreatedOn DEFAULT GETUTCDATE()
+    )
+END;

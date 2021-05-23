@@ -17,21 +17,21 @@ END;
 
 IF NOT EXISTS (SELECT 1
 FROM INFORMATION_SCHEMA.TABLES AS it
-WHERE it.TABLE_NAME = 'TransactionStage')
+WHERE it.TABLE_NAME = 'BatchStage')
 BEGIN
-    CREATE TABLE TransactionStage
+    CREATE TABLE BatchStage
     (
-        TransactionStageId INT NOT NULL CONSTRAINT PK_TransactionStage PRIMARY KEY IDENTITY(1,1),
-        TransactionStage VARCHAR(20) NOT NULL
+        BatchStageId INT NOT NULL CONSTRAINT PK_BatchStage PRIMARY KEY IDENTITY(1,1),
+        BatchStage VARCHAR(20) NOT NULL
     )
 END;
 
 IF EXISTS (SELECT 1
 FROM INFORMATION_SCHEMA.TABLES AS it
-WHERE it.TABLE_NAME = 'TransactionStage')
+WHERE it.TABLE_NAME = 'BatchStage')
 BEGIN
-    INSERT INTO TransactionStage
-        (TransactionStage)
+    INSERT INTO BatchStage
+        (BatchStage)
     VALUES
         ('Created'),
         ('Processing'),
@@ -43,19 +43,18 @@ END;
 
 IF NOT EXISTS (SELECT 1
 FROM INFORMATION_SCHEMA.TABLES AS it
-WHERE it.TABLE_NAME = 'Transaction')
+WHERE it.TABLE_NAME = 'Batch')
 BEGIN
-    CREATE TABLE [Transaction]
+    CREATE TABLE [Batch]
     (
-        TransactionId UNIQUEIDENTIFIER NOT NULL CONSTRAINT PK_Transaction PRIMARY KEY CLUSTERED,
-        ClientId UNIQUEIDENTIFIER NOT NULL CONSTRAINT FK_TransactionClient FOREIGN KEY REFERENCES Client (ClientId),
+        BatchId UNIQUEIDENTIFIER NOT NULL CONSTRAINT PK_Batch DEFAULT NEWID() PRIMARY KEY CLUSTERED,
+        ClientId UNIQUEIDENTIFIER NOT NULL CONSTRAINT FK_BatchClient FOREIGN KEY REFERENCES Client (ClientId),
         [FileName] VARCHAR(50) NULL,
         SafeFileName VARCHAR(50) NULL,
-        TransactionStageId INT NOT NULL CONSTRAINT FK_TransactionTransactionStage FOREIGN KEY REFERENCeS TransactionStage (TransactionStageId),
-        CreatedOn DATETIME2(2) NOT NULL CONSTRAINT DF_TransactionCreatedOn DEFAULT GETDATE()
+        BatchStageId INT NOT NULL CONSTRAINT FK_BatchBatchStage FOREIGN KEY REFERENCeS BatchStage (BatchStageId),
+        CreatedOn DATETIME2(2) NOT NULL CONSTRAINT DF_BatchCreatedOn DEFAULT GETUTCDATE()
     )
 END;
-
 
 IF EXISTS (SELECT 1
 FROM INFORMATION_SCHEMA.TABLES AS it

@@ -1,7 +1,4 @@
-﻿using SyncEngine.Api.Helpers;
-using SyncEngine.Core.Configuration;
-using SyncEngine.Api.Filters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -14,6 +11,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http.Features;
+using SyncEngine.Api.Helpers;
+using SyncEngine.Core;
+using SyncEngine.Core.Configuration;
+using SyncEngine.Api.Filters;
+using SyncEngine.Api.Data;
 
 namespace SyncEngine.Api.Controllers
 {
@@ -24,22 +26,24 @@ namespace SyncEngine.Api.Controllers
         private readonly ILogger<FileUploadController> logger;
         private readonly UploadSettings settings;
         private static readonly FormOptions formOptions = new FormOptions();
+        private readonly IBatchRepository batches;
 
-        public FileUploadController(ILogger<FileUploadController> logger, IOptions<UploadSettings> settings)
+        public FileUploadController(ILogger<FileUploadController> logger, IOptions<UploadSettings> settings, IBatchRepository batches)
         {
             this.logger = logger;
             this.settings = settings.Value;
+            this.batches = batches;
         }
 
         [HttpGet]
         public async Task<int> Ping()
         {
-            return 1;
+            return 100;
         }
         
-        [HttpPost]
+        [HttpPost("{clientId}")]
         [DisableFormValueModelBinding]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload(string clientId)
         {
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
@@ -73,9 +77,14 @@ namespace SyncEngine.Api.Controllers
                         var trustedFileNameForDisplay = WebUtility.HtmlEncode(
                                 contentDisposition.FileName.Value);
                         var trustedFileNameForFileStorage = Path.GetRandomFileName();
+
                         var streamedFileContent = await FileHelper.ProcessStreamedFile(
-                            section, contentDisposition, ModelState, 
-                            settings.AllowedExtensions, settings.SizeLimit);
+                            section, 
+                            contentDisposition, 
+                            ModelState, 
+                            settings.AllowedExtensions, 
+                            settings.SizeLimit
+                            );
 
                         if (!ModelState.IsValid)
                         {
@@ -86,6 +95,14 @@ namespace SyncEngine.Api.Controllers
                             Path.Combine(settings.FileFolder, trustedFileNameForFileStorage)))
                         {
                             await targetStream.WriteAsync(streamedFileContent);
+                            
+                            await batches.CreateBatch(new Batch()
+                            {
+                                ClientId = clientId,
+                                FileName = contentDisposition.FileName.Value,
+                                SafeFileName = trustedFileNameForDisplay,
+                                Stage = BatchStage.Created
+                            });
 
                             logger.LogInformation(
                                 "Uploaded file '{TrustedFileNameForDisplay}' saved to " +

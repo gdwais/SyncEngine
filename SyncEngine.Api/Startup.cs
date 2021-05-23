@@ -11,9 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using SyncEngine.Core.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-
+using SyncEngine.Core;
+using SyncEngine.Core.Configuration;
+using SyncEngine.Api.Data;
+using SyncEngine.Api.Managers;
 
 namespace SyncEngine.Api
 {
@@ -37,7 +39,7 @@ namespace SyncEngine.Api
             });
             services.Configure<UploadSettings>(Configuration);
             services.Configure<MessagesSettings>(Configuration.GetSection("RabbitMQ"));
-            services.Configure<ConnectionStrings>(Configuration.GetSection("ConfigurationStrings"));
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<KestrelServerOptions>(options =>
             {
                 options.Limits.MaxRequestBodySize = int.MaxValue;
@@ -47,8 +49,16 @@ namespace SyncEngine.Api
                 options.MaxRequestBodySize = int.MaxValue;
             });
 
-            //add services here
-    
+            //managers
+            services.AddTransient<IFileManager, FileManager>();
+
+            //repositories
+            services.AddTransient<IBatchRepository, BatchRepository>();
+            services.AddTransient<IRecordRepository, RecordRepository>();
+
+            //services
+            services.AddSingleton<IMessageService, MessageService>();
+
 
         }
 

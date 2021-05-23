@@ -4,7 +4,7 @@ using System.Text;
 using RabbitMQ.Client;
 using Newtonsoft.Json;
 
-namespace SyncEngine.Core.Messages
+namespace SyncEngine.Core
 {
     public class MessageService : IMessageService
     {
@@ -26,7 +26,7 @@ namespace SyncEngine.Core.Messages
             _conn = _factory.CreateConnection();
             _channel = _conn.CreateModel();
             _channel.QueueDeclare(queue: this.routeKey, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            
+
         }
 
         public bool Enqueue<T>(T message)

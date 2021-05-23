@@ -36,7 +36,8 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 
-docker/rabbitmq/data/
-docker/rabbitmq/logs/
+docker/rabbitmq/data/*
+docker/rabbitmq/logs/*
 
 Database/database-data/
+files/*

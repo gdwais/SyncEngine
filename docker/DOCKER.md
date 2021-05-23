@@ -6,7 +6,7 @@ Just some quick notes to make working with Docker easier here
 to login to container
 > docker exec -it syncengine-db bash
 
-to access database cli
+to access 
 > /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P '<PASSWORD>' 
 
 volume persistent in docker volume container `sqlvolume`

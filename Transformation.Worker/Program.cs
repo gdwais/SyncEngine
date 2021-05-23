@@ -4,9 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SyncEngine.Core;
 
-namespace Zoho.Worker
+namespace Transformation.Worker
 {
     public class Program
     {
@@ -19,8 +18,7 @@ namespace Zoho.Worker
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-
-                    services.AddHostedService<Consumer>();
+                    services.AddHostedService<Worker>();
                 });
     }
 }
