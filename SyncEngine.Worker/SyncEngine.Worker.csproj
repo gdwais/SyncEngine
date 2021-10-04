@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>dotnet-Zoho.Worker-ABD40D98-6409-4E00-A048-A4BDF32F6B1F</UserSecretsId>
+    <UserSecretsId>dotnet-SyncEngine.Worker-ABD40D98-6409-4E00-A048-A4BDF32F6B1F</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

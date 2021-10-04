@@ -1,10 +1,10 @@
 using SyncEngine.Core;
 using System.Threading.Tasks;
 
-namespace SyncEngine.Api.Data
+namespace SyncEngine.Data
 {
     public interface IRecordRepository
     {
-        Task CreateRecord(string clientId, string rowData);
+        Task<string> CreateRecord(string clientId, string rowData);
     }
 }

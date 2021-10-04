@@ -6,13 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using CommandLine;
 using SyncCtl.Verbs;
 using SyncEngine.Core;
-using SyncEngine.Core.Messages;
 using SyncEngine.Core.Configuration;
+using SyncEngine.Data;
 
 namespace SyncCtl
 {
     class Program
     {
+
         private static ServiceProvider serviceProvider { get; set; }
 
         public static async Task<int> Main(string[] args)
@@ -60,8 +61,7 @@ namespace SyncCtl
             var messageService = serviceProvider.GetService<IMessageService>();
             for (int i = 0; i < 5000; i++)
             {
-                var record = new Record { DomainId = options.Data };
-                messageService.Enqueue<Record>(record);
+                messageService.Enqueue<string>(options.Data);
             }
             return 1;
         }

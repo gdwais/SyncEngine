@@ -5,6 +5,6 @@ namespace SyncEngine.Core
 {
     public interface IMessageService
     {
-        bool Enqueue<T>(T message);
+        Task<bool> Enqueue<T>(T message);
     }
 }

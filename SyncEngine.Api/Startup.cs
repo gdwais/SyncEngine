@@ -38,7 +38,9 @@ namespace SyncEngine.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SyncEngine.Api", Version = "v1" });
             });
             services.Configure<UploadSettings>(Configuration);
-            services.Configure<MessagesSettings>(Configuration.GetSection("RabbitMQ"));
+            var messagesSettings = new MessagesSettings();
+            Configuration.Bind("RabbitMQ", messagesSettings);
+            services.AddSingleton<MessagesSettings>(messagesSettings);
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<KestrelServerOptions>(options =>
             {
@@ -49,16 +51,15 @@ namespace SyncEngine.Api
                 options.MaxRequestBodySize = int.MaxValue;
             });
 
-            //managers
-            services.AddTransient<IFileManager, FileManager>();
+            //services
+            services.AddSingleton<IMessageService, MessageService>();
 
             //repositories
             services.AddTransient<IBatchRepository, BatchRepository>();
             services.AddTransient<IRecordRepository, RecordRepository>();
 
-            //services
-            services.AddSingleton<IMessageService, MessageService>();
-
+            //managers
+            services.AddTransient<IFileManager, FileManager>();
 
         }
 

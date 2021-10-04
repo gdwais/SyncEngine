@@ -16,6 +16,7 @@ using SyncEngine.Core;
 using SyncEngine.Core.Configuration;
 using SyncEngine.Api.Filters;
 using SyncEngine.Api.Data;
+using SyncEngine.Api.Managers;
 
 namespace SyncEngine.Api.Controllers
 {
@@ -27,12 +28,16 @@ namespace SyncEngine.Api.Controllers
         private readonly UploadSettings settings;
         private static readonly FormOptions formOptions = new FormOptions();
         private readonly IBatchRepository batches;
+        private readonly IFileManager fileManager;
+        private readonly IMessageService messageService;
 
-        public FileUploadController(ILogger<FileUploadController> logger, IOptions<UploadSettings> settings, IBatchRepository batches)
+        public FileUploadController(ILogger<FileUploadController> logger, IOptions<UploadSettings> settings, IBatchRepository batches, IFileManager fileManager, IMessageService messageService)
         {
             this.logger = logger;
             this.settings = settings.Value;
             this.batches = batches;
+            this.fileManager = fileManager;
+            this.messageService = messageService;
         }
 
         [HttpGet]
@@ -90,26 +95,19 @@ namespace SyncEngine.Api.Controllers
                         {
                             return BadRequest(ModelState);
                         }
-
-                        using (var targetStream = System.IO.File.Create(
-                            Path.Combine(settings.FileFolder, trustedFileNameForFileStorage)))
+                        
+                        var batch = new Batch()
                         {
-                            await targetStream.WriteAsync(streamedFileContent);
-                            
-                            await batches.CreateBatch(new Batch()
-                            {
-                                ClientId = clientId,
-                                FileName = contentDisposition.FileName.Value,
-                                SafeFileName = trustedFileNameForDisplay,
-                                Stage = BatchStage.Created
-                            });
+                            ClientId = clientId,
+                            FileName = contentDisposition.FileName.Value,
+                            SafeFileName = trustedFileNameForFileStorage,
+                            Stage = BatchStage.Created
+                        };
 
-                            logger.LogInformation(
-                                "Uploaded file '{TrustedFileNameForDisplay}' saved to " +
-                                "'{TargetFilePath}' as {TrustedFileNameForFileStorage}", 
-                                trustedFileNameForDisplay, settings.FileFolder, 
-                                trustedFileNameForFileStorage);
-                        }
+                        await fileManager.WriteFile(streamedFileContent, settings.FileFolder, trustedFileNameForDisplay, trustedFileNameForFileStorage);
+
+                        batch = await batches.CreateBatch(batch);
+                        await messageService.Enqueue<Batch>(batch);
                     }
                 }
 

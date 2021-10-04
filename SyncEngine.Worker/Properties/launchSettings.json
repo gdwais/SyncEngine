@@ -1,8 +1,7 @@
 ﻿{
   "profiles": {
-    "Transformation.Worker": {
+    "SyncEngine.Worker": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }

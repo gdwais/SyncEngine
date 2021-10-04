@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncEngine.Api.Tests", "Syn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncCtl", "SyncCtl\SyncCtl.csproj", "{648BFC01-5D62-465A-8C02-13F1B6A63730}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zoho.Worker", "Zoho.Worker\Zoho.Worker.csproj", "{F47979E6-F85B-4D7B-A1C9-7BCB3D81C0AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncEngine.Worker", "SyncEngine.Worker\SyncEngine.Worker.csproj", "{F47979E6-F85B-4D7B-A1C9-7BCB3D81C0AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncEngine", "SyncEngine\SyncEngine.csproj", "{28925034-4C94-4F89-BE05-D1780B9D456D}"
 EndProject

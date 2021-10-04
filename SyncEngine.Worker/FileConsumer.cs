@@ -11,19 +11,23 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SyncEngine.Core;
 
-namespace Zoho.Worker
+namespace SyncEngine.Worker
 {
-    public class Consumer : BackgroundService
+    public class FileConsumer : BackgroundService
     {
-        private readonly ILogger<Consumer> logger;
+        private readonly ILogger<FileConsumer> logger;
         private IConnection connection;
         private IModel channel;
+        private readonly BatchProcessor processor;
 
-        public Consumer(ILogger<Consumer> logger)
+        public FileConsumer(ILogger<FileConsumer> logger, BatchProcessor processor)
         {
             this.logger = logger;
+            this.processor = processor;
             InitRabbitMQ();
         }
+
+        private const string queueName = "Queue:StartBatch";
          
         private void InitRabbitMQ()
         {
@@ -35,7 +39,7 @@ namespace Zoho.Worker
                 factory.Password = "guest";
                 connection = factory.CreateConnection();
                 channel = connection.CreateModel();
-                channel.QueueDeclare(queue: "hello",
+                channel.QueueDeclare(queue: queueName,
                                         durable: false,
                                         exclusive: false,
                                         autoDelete: false,
@@ -65,8 +69,8 @@ namespace Zoho.Worker
             consumer.Received += async (ch, ea) => 
             {
                 var jsonContent = Encoding.UTF8.GetString(ea.Body.ToArray());
-                Record record = JsonConvert.DeserializeObject<Record>(jsonContent);
-                HandleMessage(record);
+                Batch batch = JsonConvert.DeserializeObject<Batch>(jsonContent);
+                HandleMessage(batch);
                 channel.BasicAck(ea.DeliveryTag, false);
                 await Task.Yield();
             };
@@ -75,13 +79,13 @@ namespace Zoho.Worker
             consumer.Registered += OnConsumerRegistered;
             consumer.Unregistered += OnConsumerUnregistered;
             consumer.ConsumerCancelled += OnConsumerConsumerCancelled;
-            channel.BasicConsume(queue: "hello", autoAck: false, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
             return Task.CompletedTask;
         }
 
-        private void HandleMessage(Record record)
+        private void HandleMessage(Batch batch)
         {
-            logger.LogInformation($"consumer received {record.DomainId}");
+            processor.ProcessBatch(batch);
         }
 
         private void OnConsumerConsumerCancelled(object sender, ConsumerEventArgs e)  {  }  

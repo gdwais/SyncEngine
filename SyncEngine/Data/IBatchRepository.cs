@@ -1,10 +1,10 @@
 using SyncEngine.Core;
 using System.Threading.Tasks;
 
-namespace SyncEngine.Api.Data
+namespace SyncEngine.Data
 {
     public interface IBatchRepository
     {
-        Task CreateBatch(Batch batch);
+        Task<Batch> CreateBatch(Batch batch);
     }
 }

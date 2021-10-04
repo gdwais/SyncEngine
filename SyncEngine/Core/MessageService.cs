@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using RabbitMQ.Client;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace SyncEngine.Core
 {
@@ -29,13 +30,13 @@ namespace SyncEngine.Core
 
         }
 
-        public bool Enqueue<T>(T message)
+        public Task<bool> Enqueue<T>(T message)
         {
             String jsonified = JsonConvert.SerializeObject(message);
             var body = Encoding.UTF8.GetBytes(jsonified);
             _channel.BasicPublish(exchange: "", routingKey: routeKey, basicProperties: null, body: body);
             
-            return true;
+            return Task.FromResult(true);
         }
     }
 }
