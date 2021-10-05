@@ -2,25 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using SyncEngine.Core.Configuration;
+using SyncEngine.Domain;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Linq;
-using SyncEngine.Data;
+using SyncEngine.Messaging;
+using System.Reflection;
 
 
-namespace SyncEngine.Core
+namespace SyncEngine.Managers
 {
     public class FileManager : Disposer, IFileManager
     {
         
         private readonly ILogger<FileManager> logger;
         private readonly IMessageService messageService;
-        private readonly Loader loader;
-        public FileManager(ILogger<FileManager> logger,  Loader loader)
+        
+        public FileManager(ILogger<FileManager> logger)
         {
             this.logger = logger;
-            this.loader = loader;
         }
 
         public async Task WriteFile(byte[] streamedFileContent, string fileFolder, string trustedFileNameForDisplay, string trustedFileNameForFileStorage)
@@ -46,7 +45,7 @@ namespace SyncEngine.Core
 
             foreach(var fields in data)
             {
-                var record = loader.LoadNew<Record>(fields);
+                var record = LoadNew<Record>(fields);
                 record.Initialize();
                 records.Add(record);
             }
@@ -84,6 +83,60 @@ namespace SyncEngine.Core
                 tupleList.Add((indexes[i], indexes[i + 1]));
             }
             return tupleList;
+        }
+
+        public void Load(object target, string[] fields)
+        {
+            Type targetType = target.GetType();
+            PropertyInfo[] properties = targetType.GetProperties();
+            
+            foreach (PropertyInfo property in properties)  
+            {
+                if (property.CanWrite)                      
+                    {
+                        object[] attributes = property.GetCustomAttributes(typeof(PositionAttribute), false);
+                        
+                        if (attributes.Length > 0)
+                        {
+                            PositionAttribute positionAttr = 
+                                (PositionAttribute)attributes[0];
+                                        
+                            int position = positionAttr.Position;
+
+                            try
+                            {
+                                object data = fields[position];
+                                if (positionAttr.DataTransform != string.Empty)
+                                {
+                                    MethodInfo method = targetType.GetMethod(positionAttr.DataTransform);
+                                    data = method.Invoke(target, new object[] { data });
+                                }
+                                
+                                if (data != null)
+                                {
+                                    var propertyType = property.PropertyType;
+                                    var convertedData = Convert.ChangeType(data, propertyType);
+                                    property.SetValue(target, convertedData, null);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                if (ex.Message != NullObjectError)
+                                    logger.LogError("ERROR LOADING FILE :: " + ex.Message.ToString());
+                            }        
+                        }
+                        
+                }    
+            }
+        }   
+        
+        private static string NullObjectError = "Null object cannot be converted to a value type.";
+
+        public X LoadNew<X>(string[] fields)
+        {   
+            X tempObj = (X) Activator.CreateInstance(typeof(X));
+            Load(tempObj, fields);
+            return tempObj;
         }
     }
 

@@ -1,11 +1,11 @@
-using SyncEngine.Core.Configuration;
+using SyncEngine.Domain;
 using System;
 using System.Text;
 using RabbitMQ.Client;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace SyncEngine.Core
+namespace SyncEngine.Messaging
 {
     public class MessageService : IMessageService
     {

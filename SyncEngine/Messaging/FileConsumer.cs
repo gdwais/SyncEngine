@@ -9,9 +9,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using SyncEngine.Core;
+using SyncEngine.Domain;
+using SyncEngine.Processor;
 
-namespace SyncEngine.Worker
+namespace SyncEngine.Messaging
 {
     public class FileConsumer : BackgroundService
     {

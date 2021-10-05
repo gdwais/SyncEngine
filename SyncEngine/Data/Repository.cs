@@ -1,4 +1,4 @@
-using SyncEngine.Core.Configuration;
+using SyncEngine.Domain;
 using Microsoft.Extensions.Options;
 using Dapper;
 using System;
@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace SyncEngine.Core
+namespace SyncEngine.Data
 {
     public class Repository
     {

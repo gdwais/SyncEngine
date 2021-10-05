@@ -1,4 +1,4 @@
-namespace SyncEngine.Core.Configuration
+namespace SyncEngine.Domain
 {
     public class ConnectionStrings
     {

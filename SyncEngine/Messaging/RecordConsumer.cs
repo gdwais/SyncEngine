@@ -9,8 +9,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using SyncEngine.Core;
-using SyncEngine.Data;
+using SyncEngine.Domain;
 
 namespace SyncEngine.Worker
 {

@@ -1,5 +1,4 @@
-using SyncEngine.Core;
-using SyncEngine.Core.Configuration;
+using SyncEngine.Domain;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;

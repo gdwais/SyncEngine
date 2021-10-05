@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SyncEngine.Core;
-using SyncEngine.Core.Configuration;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using SyncEngine.Domain;
+using SyncEngine.Managers;
+using SyncEngine.Messaging;
+using SyncEngine.Processor;
 
 namespace SyncEngine.Worker
 {
@@ -28,11 +26,8 @@ namespace SyncEngine.Worker
                     services.AddSingleton<MessagesSettings>(messagesSettings);
                     services.AddSingleton<IMessageService, MessageService>();
                     services.Configure<ConnectionStrings>(config.GetSection("ConnectionStrings"));
-                    services.AddSingleton<Loader>();
                     services.AddSingleton<IFileManager, FileManager>();
-
                     services.AddSingleton<BatchProcessor>();
-
                     services.AddHostedService<FileConsumer>();
                     services.AddHostedService<RecordConsumer>();
                 });

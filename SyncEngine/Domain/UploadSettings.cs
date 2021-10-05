@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace SyncEngine.Core.Configuration
+namespace SyncEngine.Domain
 {
     public class UploadSettings
     {

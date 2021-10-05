@@ -1,7 +1,8 @@
-using SyncEngine.Core;
-using SyncEngine.Data;
+using SyncEngine.Domain;
+using SyncEngine.Messaging;
+using SyncEngine.Managers;
 
-namespace SyncEngine.Worker
+namespace SyncEngine.Processor
 {
     public class BatchProcessor
     {
@@ -17,12 +18,12 @@ namespace SyncEngine.Worker
         public bool ProcessBatch(Batch batch)
         {
             var records = fileManager.GetRecordsFromFile("../files", batch.SafeFileName);
+            
             foreach(var record in records)
             {
                 messageService.Enqueue<Record>(record);   
             }
             return true;
         }
-
     }
 }

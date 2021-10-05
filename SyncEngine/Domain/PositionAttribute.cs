@@ -1,6 +1,6 @@
 using System;
 
-namespace SyncEngine.Core
+namespace SyncEngine.Domain
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class PositionAttribute : System.Attribute 

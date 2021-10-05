@@ -1,6 +1,6 @@
 using System;
 
-namespace SyncEngine.Core.Configuration
+namespace SyncEngine.Domain
 {
     public class MessagesSettings
     {

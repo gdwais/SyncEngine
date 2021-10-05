@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using SyncEngine.Core;
+using SyncEngine.Domain;
 
-namespace SyncEngine.Core
+namespace SyncEngine.Messaging
 {
     public interface IMessageService
     {

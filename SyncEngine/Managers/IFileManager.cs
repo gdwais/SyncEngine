@@ -1,9 +1,8 @@
-using SyncEngine.Core;
+using SyncEngine.Domain;
 using System.Threading.Tasks;
-using SyncEngine.Data;
 using System.Collections.Generic;
 
-namespace SyncEngine.Core
+namespace SyncEngine.Managers
 {
     public interface IFileManager 
     {

@@ -1,4 +1,4 @@
-using SyncEngine.Core;
+using SyncEngine.Domain;
 using System.Threading.Tasks;
 
 namespace SyncEngine.Data

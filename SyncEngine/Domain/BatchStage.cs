@@ -1,4 +1,4 @@
-namespace SyncEngine.Core
+namespace SyncEngine.Domain
 {
     public enum BatchStage
     {

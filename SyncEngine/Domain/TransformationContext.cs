@@ -1,5 +1,5 @@
 
-namespace SyncEngine.Core
+namespace SyncEngine.Domain
 {
     public class TransformationContext
     {
