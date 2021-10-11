@@ -5,8 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CommandLine;
 using SyncCtl.Verbs;
-using SyncEngine.Core;
-using SyncEngine.Core.Configuration;
+using SyncEngine.Domain;
 using SyncEngine.Data;
 
 namespace SyncCtl

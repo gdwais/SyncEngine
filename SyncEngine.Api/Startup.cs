@@ -12,10 +12,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using SyncEngine.Core;
-using SyncEngine.Core.Configuration;
-using SyncEngine.Api.Data;
-using SyncEngine.Api.Managers;
+using SyncEngine.Domain;
+using SyncEngine.Data;
+using SyncEngine.Managers;
+using SyncEngine.Messaging;
 
 namespace SyncEngine.Api
 {

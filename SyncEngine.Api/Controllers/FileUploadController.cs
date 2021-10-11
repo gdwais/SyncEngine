@@ -11,12 +11,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http.Features;
+using SyncEngine.Domain;
 using SyncEngine.Api.Helpers;
-using SyncEngine.Core;
-using SyncEngine.Core.Configuration;
 using SyncEngine.Api.Filters;
-using SyncEngine.Api.Data;
-using SyncEngine.Api.Managers;
+using SyncEngine.Data;
+using SyncEngine.Managers;
+using SyncEngine.Messaging;
 
 namespace SyncEngine.Api.Controllers
 {
@@ -43,7 +43,7 @@ namespace SyncEngine.Api.Controllers
         [HttpGet]
         public async Task<int> Ping()
         {
-            return 100;
+            return Result.From(100);
         }
         
         [HttpPost("{clientId}")]
